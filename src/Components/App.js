@@ -1,67 +1,74 @@
-import React from 'react';
-import { Grid } from '@material-ui/core'
+import React , { useState, useEffect }from 'react';
+import { Grid, CircularProgress } from '@material-ui/core'
 import Youtube from '../Api/Youtube'
 import { SearchBar, VideoList, VideoDetail } from './'
+
+
+const App = () => { 
  
-class App extends React.Component {
-  constructor() {
-    super()
-    this.onVideoSelect = this.onVideoSelect.bind(this)
-  }
+  const [videos, setVideos] = useState([]) 
+  const [fetchedResults, setFetchedResults] = useState(false) 
+  const [selectedVideo, setSelectedVideo] = useState(null) 
 
-  state = {
-    videos : [],
-    selectedVideo : null
-  }
+  const apiKey = 'AIzaSyDuCwfv83VKgg4iDP8CLdCfnRWT9MxVg4Y'
 
-  apiKey = 'AIzaSyDuCwfv83VKgg4iDP8CLdCfnRWT9MxVg4Y'
-
-  handleSubmit = async (searchTerm) => {
+  const handleSubmit = async (searchTerm) => {
     const response = await Youtube
     .get('search', { 
       params: {
-        key: this.apiKey,
+        key: apiKey,
         part: 'snippet',
         maxResults: 10,
-        q: searchTerm  
+        q: searchTerm
       } 
     })
-    console.log(response) 
-    this.setState({
-      videos : response.data.items, 
-      selectedVideo: response.data.items[0]
-    })
+    
+    setVideos(response.data.items)
+    setSelectedVideo(response.data.items[0])
+    setFetchedResults(true)
   }
 
-  componentDidMount() {
-    this.handleSubmit('javascript')
+  useEffect(() => {
+    handleSubmit('javascript')
+  }, [])
+
+  const onVideoSelect = (video) => {
+    setSelectedVideo(video);
   }
 
-  onVideoSelect(video) {
-    this.setState({ selectedVideo:video })
-  }
-
-  render() {
-    const { selectedVideo, videos } = this.state
-
+  if (!fetchedResults) { 
     return (
-      <Grid style={{ justifyContent:"center" }} container spacing={10}>
-        <Grid item xs={11}  >
-          <Grid container spacing={4}>
-            <Grid item xs={12}>
-              <SearchBar onFormSubmit={this.handleSubmit} />
-            </Grid>
-            <Grid item xs={8}>
-              <VideoDetail video={selectedVideo} />
-            </Grid>
-            <Grid item xs={4}> 
-              <VideoList onVideoSelect={this.onVideoSelect} videos={videos}/>
-            </Grid>
-          </Grid> 
-        </Grid>  
-      </Grid>  
-    )
+      <Grid 
+        container 
+        justify="center" 
+        alignItems="center"
+        style={{ minHeight: "100vh" }}
+      >
+        <CircularProgress />
+      </Grid>
+    )   
   }
+    
+  return (
+    <Grid style={{ justifyContent:"center" }} container spacing={10}>
+      <Grid item xs={12} sm={11}>
+        <Grid container spacing={4}>
+          <Grid item xs={12} sm={12}>
+            <SearchBar onFormSubmit={handleSubmit} />
+          </Grid>
+          <Grid item xs={12} sm={8}>
+            <VideoDetail video={selectedVideo} />
+          </Grid>
+          <Grid item xs={12} sm={4}> 
+            <VideoList 
+              onVideoSelect={onVideoSelect} 
+              videos={videos}
+            />
+          </Grid>
+        </Grid> 
+      </Grid>  
+    </Grid>  
+  )
 }
 
 export default App

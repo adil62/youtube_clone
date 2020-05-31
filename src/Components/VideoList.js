@@ -3,19 +3,17 @@ import { Grid, Typography, Paper } from '@material-ui/core'
 
 import VideoItem from './VideoItem'
 
-class VideoList extends React.Component { 
-  render() {
-    console.log(this.props.videos)
-    const videoList = this.props.videos.map((video, index) => {
-      return <VideoItem onVideoSelect={this.props.onVideoSelect} key={index} video={video}/>
-    })
+const VideoList = ({ videos, onVideoSelect }) => { 
+  
+  const videoList = videos.map((video, index) => {
+    return <VideoItem onVideoSelect={onVideoSelect} key={index} video={video}/>
+  })
 
-    return (
-      <Grid container spacing={5}>
-        {videoList}      
-      </Grid>
-    )
-  }
+  return (
+    <Grid container spacing={5}>
+      {videoList}      
+    </Grid>
+  )
 }
 
 export default VideoList 

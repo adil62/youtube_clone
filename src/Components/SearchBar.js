@@ -1,48 +1,46 @@
-import React from 'react';
+import React , { useState } from 'react';
 import { Paper, TextField } from '@material-ui/core'
+import { makeStyles } from '@material-ui/core/styles';
 
-class SearchBar extends React.Component {
+const SearchBar  = ({onFormSubmit}) => {
+  const [searchTerm, setSearchTerm] = useState('');
 
-  constructor() {
-    super()
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-
-  state = {
-    searchTerm : '',
-    searchTerm2 : ''
-  }
-
-  handleChange(e) {
+  const useStyles = makeStyles({
+    redBorder: {
+      border: '2px solid black'
+    } 
+  });
+  
+  const classes = useStyles();
+  
+  const handleChange = (e) => {
     const {value} = e.target;
-    this.setState({ searchTerm: value });
+    setSearchTerm(value);
   }  
 
-  handleSubmit(e) {
-    const { searchTerm } = this.state 
-    const { onFormSubmit } = this.props 
-    
+  const handleSubmit = (e) => {
     onFormSubmit(searchTerm) 
 
     e.preventDefault()
   }
- 
-  render() {
-    return (
-      <Paper elevation={6} style={{ padding:'25px' }}>
-        <form onSubmit={this.handleSubmit}> 
-          <TextField 
-            fullWidth 
-            value={this.state.searchTerm}
-            label="Search" 
-            onChange={this.handleChange}
-          >
-          </TextField>
-        </form>
-      </Paper>
-    )
-  }
+   
+  return (    
+    <Paper 
+      elevation={2} 
+      style={{ padding:'25px' }} 
+      className={classes.redBorder}
+    >
+      <form onSubmit={handleSubmit}> 
+        <TextField 
+          fullWidth 
+          value={searchTerm}
+          label="Search" 
+          onChange={handleChange}
+        >
+        </TextField>
+      </form>
+    </Paper>
+  )
 } 
 
 export default SearchBar 
