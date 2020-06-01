@@ -2,15 +2,17 @@ import React , { useState, useEffect }from 'react';
 import { Grid, CircularProgress } from '@material-ui/core'
 import Youtube from '../Api/Youtube'
 import { SearchBar, VideoList, VideoDetail } from './'
-
+import { videosFetchedActionCreator, videoSelectedActionCreator } from '../Actions/index.js'
+import { useDispatch, useSelector } from "react-redux";
 
 const App = () => { 
- 
-  const [videos, setVideos] = useState([]) 
-  const [fetchedResults, setFetchedResults] = useState(false) 
-  const [selectedVideo, setSelectedVideo] = useState(null) 
 
   const apiKey = 'AIzaSyDuCwfv83VKgg4iDP8CLdCfnRWT9MxVg4Y'
+  const dispatch = useDispatch()
+
+  const selectedVideo = useSelector(state => state.selectedVideo)
+  const fetchedResults = useSelector(state => state.fetchedResults)
+  const videos = useSelector(state => state.videos)
 
   const handleSubmit = async (searchTerm) => {
     const response = await Youtube
@@ -23,18 +25,24 @@ const App = () => {
       } 
     })
     
-    setVideos(response.data.items)
-    setSelectedVideo(response.data.items[0])
-    setFetchedResults(true)
+    dispatch(
+      videosFetchedActionCreator(
+        'VIDEOS_FETCHED', 
+        response.data.items
+      )
+    )
+
+    dispatch(
+      videoSelectedActionCreator(
+        'VIDEO_SELECTED', 
+        response.data.items[0]
+      )
+    )
   }
 
   useEffect(() => {
     handleSubmit('javascript')
   }, [])
-
-  const onVideoSelect = (video) => {
-    setSelectedVideo(video);
-  }
 
   if (!fetchedResults) { 
     return (
@@ -54,16 +62,13 @@ const App = () => {
       <Grid item xs={12} sm={11}>
         <Grid container spacing={4}>
           <Grid item xs={12} sm={12}>
-            <SearchBar onFormSubmit={handleSubmit} />
+            <SearchBar />
           </Grid>
           <Grid item xs={12} sm={8}>
-            <VideoDetail video={selectedVideo} />
+            <VideoDetail />
           </Grid>
           <Grid item xs={12} sm={4}> 
-            <VideoList 
-              onVideoSelect={onVideoSelect} 
-              videos={videos}
-            />
+            <VideoList />
           </Grid>
         </Grid> 
       </Grid>  

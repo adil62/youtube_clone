@@ -1,7 +1,9 @@
 import React from 'react';
 import { Typography, Paper } from '@material-ui/core' 
+import {useSelector} from 'react-redux'
 
-const VideoDetail = ({video}) => {
+const VideoDetail = () => {
+  const video = useSelector(state => state.selectedVideo)
 
   if (!video) return <div>Loading...</div>
 

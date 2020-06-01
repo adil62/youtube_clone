@@ -29,7 +29,7 @@ const selectedVideo = (state = false, action) => {
 }
 
 const searchTerm = (state = '', action) => {
-  if ('SEARCHED_TERM') {
+  if (action.type === 'SEARCHED_TERM') {
     return action.payload 
   }
   return state;

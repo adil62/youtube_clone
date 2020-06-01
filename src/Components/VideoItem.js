@@ -1,11 +1,17 @@
 import React from 'react'
 import { Grid, Typography, Paper } from '@material-ui/core' 
 
-const VideoItem = ({ onVideoSelect, video }) => {
+const VideoItem = ({ video }) => {
+  const onVideoSelect = (video) => {
+    dispatch(
+      videoSelectedActionCreator('VIDEO_SELECTED', video)
+    )  
+  }
+
   return (
     <Grid item xs={12} style={{ cursor: 'pointer' }}>
       <Paper 
-        onClick = { () => onVideoSelect(video)}
+        onClick = { () =>  onVideoSelect(video)}
         style={{ 
           display:'flex', 
           alignItems:'center', 
