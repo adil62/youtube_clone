@@ -4,7 +4,8 @@ import {useSelector} from 'react-redux'
 
 const VideoDetail = () => {
   const video = useSelector(state => state.selectedVideo)
-
+console.log('video..')
+console.log(video)
   if (!video) return <div>Loading...</div>
 
   const videoSrc = `https://www.youtube.com/embed/${video.id.videoId}`

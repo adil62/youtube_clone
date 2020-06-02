@@ -2,41 +2,49 @@ import React , { useState, useEffect }from 'react';
 import { Grid, CircularProgress } from '@material-ui/core'
 import Youtube from '../Api/Youtube'
 import { SearchBar, VideoList, VideoDetail } from './'
-import { videosFetchedActionCreator, videoSelectedActionCreator } from '../Actions/index.js'
+import { fetchVideosActionCreator ,videosFetchedActionCreator, videoSelectedActionCreator } from '../Actions/index.js'
 import { useDispatch, useSelector } from "react-redux";
 
 const App = () => { 
-
   const apiKey = 'AIzaSyDuCwfv83VKgg4iDP8CLdCfnRWT9MxVg4Y'
+
   const dispatch = useDispatch()
 
   const selectedVideo = useSelector(state => state.selectedVideo)
   const fetchedResults = useSelector(state => state.fetchedResults)
   const videos = useSelector(state => state.videos)
 
-  const handleSubmit = async (searchTerm) => {
-    const response = await Youtube
-    .get('search', { 
-      params: {
-        key: apiKey,
-        part: 'snippet',
-        maxResults: 10,
-        q: searchTerm
-      } 
-    })
+  const handleSubmit =  (searchTerm) => {
+    // const response = await Youtube
+    // .get('search', { 
+    //   params: {
+    //     key: apiKey,
+    //     part: 'snippet',
+    //     maxResults: 10,
+    //     q: searchTerm
+    //   } 
+    // })
     
-    dispatch(
-      videosFetchedActionCreator(
-        'VIDEOS_FETCHED', 
-        response.data.items
-      )
-    )
+    // dispatch(
+    //   videosFetchedActionCreator(
+    //     'VIDEOS_FETCHED', 
+    //     response.data.items
+    //   )
+    // )
+
+    // dispatch(
+    //   videoSelectedActionCreator(
+    //     'VIDEO_SELECTED', 
+    //     response.data.items[0]
+    //   )
+    // )
 
     dispatch(
-      videoSelectedActionCreator(
-        'VIDEO_SELECTED', 
-        response.data.items[0]
-      )
+      fetchVideosActionCreator({
+        searchTerm: searchTerm, 
+        apiKey: apiKey, 
+        Youtube: Youtube
+      })
     )
   }
 

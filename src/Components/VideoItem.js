@@ -1,10 +1,15 @@
 import React from 'react'
 import { Grid, Typography, Paper } from '@material-ui/core' 
+import { useDispatch } from "react-redux";
+import { videoSelectedActionCreator } from "../Actions";
+
 
 const VideoItem = ({ video }) => {
+  const dispatch = useDispatch();
+
   const onVideoSelect = (video) => {
     dispatch(
-      videoSelectedActionCreator('VIDEO_SELECTED', video)
+      videoSelectedActionCreator(video)
     )  
   }
 
@@ -29,7 +34,7 @@ const VideoItem = ({ video }) => {
           alt="thumbnail"
           src={ video.snippet.thumbnails.medium.url }
         />
-        <Typography variant="subtitle1">  
+        <Typography variant="subtitle2">  
           <b> { video.snippet.title } </b>
         </Typography>
       </Paper> 
